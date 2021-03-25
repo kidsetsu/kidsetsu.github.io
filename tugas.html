@@ -34,10 +34,9 @@
         (async function () {
             const fetchApi = async (endPoint) => {
                 try {
-                    const res = await fetch(`https://api.github.com/${endPoint}`, {
+                    const res = await fetch(`https://api.github.com/${endPoint}?access_token=c67ac0057d6780ca900388a68ae8e98e1d87ea71`, {
                         headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Authorization': 'token c67ac0057d6780ca900388a68ae8e98e1d87ea71'
+                            'Accept': 'application/vnd.github.v3+json'
                         }
                     });
 
