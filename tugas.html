@@ -32,57 +32,84 @@
 
     <script type="module">
         (async function () {
-            const fetchApi = async (endPoint) => {
-                try {
-                    const res = await fetch(`https://api.github.com/${endPoint}?access_token=c67ac0057d6780ca900388a68ae8e98e1d87ea71`, {
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-
-                    return res ? res.json?.() : null;
-                } catch (err) {
-                    console.error(err);
-                    return null;
-                }
+            const fetchApi = (endPoint) => {
+                return fetch(`https://api.github.com/${endPoint}`, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': 'token bce5c6bbe93ab3ac10658a78608cabafce2aab81'
+                    }
+                }).then(res => res.json());
             }
 
-            const following = await fetchApi('users/kidsetsu/following');
-            const students = await fetch('siswa.json')
+            if (location.search === '?clear') {
+                localStorage.clear()
+                location.href = location.pathname
+            }
+
+            const following = await fetchApi('users/kidsetsu/following') || [];
+            let students = await fetch('siswa.json')
                 .then(res => res.json())
                 .then(students => students.sort((a, b) => {
                     a = a.name.toLowerCase()
                     b = b.name.toLowerCase()
                     return a < b ? -1 : b < a ? 1 : 0;
                 }));
+            
+            students = await Promise.all(students.map(async (student) => {
+                if (!student.username) return student
 
-            const fetchStudent = async (student) => {
-                let page_url = student.username.toLowerCase();
+                const cached = localStorage.getItem(student.username)
 
-                return Promise.all([
-                    fetchApi(`users/${student.username}`),
-                    fetchApi(`repos/${student.username}/${student.username}`),
-                    fetchApi(`repos/${student.username}/${student.username}.github.io`)
-                ]).then(([profile, repo, page]) => {
-                    student.avatar_url = profile.avatar_url || null
-                    student.repo_url = repo.html_url || null
-                    student.page_url = page.html_url ? `https://${page_url}.github.io` : null
-                })
+                if (cached) {
+                    return Object.assign({}, student, JSON.parse(cached))
+                }
+
+                const repos = await fetchApi(`users/${student.username}/repos`)
+                const repo = repos.find(repo => repo.name === student.username)
+                const page = repos.find(repo => 
+                    repo.name.toLowerCase() === `${student.username.toLowerCase()}.github.io`)
+                
+                if (repo) {
+                    student.github_url = repo.owner.html_url
+                    student.avatar_url = repo.owner.avatar_url
+                    student.repo_url = repo.html_url
+                }
+                
+                if (page && page.has_pages) {
+                    const page_url = `https://${student.username.toLowerCase()}.github.io`;
+
+                    try {
+                        student.site = await fetch(page_url, { method: 'HEAD' });
+
+                        student.has_page = student.site.status === 200;
+                        student.page_url = student.has_page ? page_url : page.html_url;
+                    } catch(err) {
+                        console.error(err);
+                    }
+                }
+
+                localStorage.setItem(student.username, JSON.stringify(student))
+
+                return Object.assign({}, student)
+            }))
+
+            const newLink = (url, title, has_link) => {
+                let $link
+                let check = has_link ? '✅' : '❌'
+
+                if (url) {
+                    $link = document.createElement('a')
+                    $link.href = url
+                    $link.target = '_blank'
+                    $link.innerText = `${check} ${title}`
+                } else {
+                    $link = document.createElement('span')
+                    $link.innerText = `❌ ${title}`
+                }
+                return $link;
             }
 
             const $main = document.getElementById('siswa')
-
-            for (let student of students) {
-                if (!student.username) continue;
-
-                student.github_url = `https://github.com/${student.username}`
-                
-                let followed = (following || []).find(user => user.login === student.username) || false;
-
-                if (student.username) {
-                    await fetchStudent(student)
-                }
-            }
             
             students.map(student => {
                 const $student = document.createElement('div')
@@ -95,49 +122,21 @@
                     : 'no-img.png'
                 $student.appendChild($avatar)
 
-                let $github, $repo, $page
                 const $name = document.createElement('h4')
                 $name.innerText = student.name
                 $student.appendChild($name)
 
                 const $links = document.createElement('div')
 
-                if (student.github_url) {
-                    $github = document.createElement('a')
-                    $github.href = student.github_url
-                    $github.target = '_blank'
-                    $github.innerText = '✅ Github'
-                } else {
-                    $github = document.createElement('span')
-                    $github.innerText = '❌ Github'
-                }
-                $links.appendChild($github)
-
-                if (student.repo_url) {
-                    $repo = document.createElement('a')
-                    $repo.href = student.repo_url
-                    $repo.target = '_blank'
-                    $repo.innerText = '✅ Repository'
-                } else {
-                    $repo = document.createElement('span')
-                    $repo.innerText = '❌ Repository'
-                }
-                $links.appendChild($repo)
-
-                if (student.page_url) {
-                    $page = document.createElement('a')
-                    $page.href = student.page_url
-                    $page.target = '_blank'
-                    $page.innerText = '✅ Website'
-                } else {
-                    $page = document.createElement('span')
-                    $page.innerText = '❌ Website'
-                }
-                $links.appendChild($page)
+                $links.appendChild(newLink(student.github_url, 'GitHub', student.github_url?.includes(student.username)))
+                $links.appendChild(newLink(student.repo_url, 'Repository', student.repo_url?.includes(student.username)))
+                $links.appendChild(newLink(student.page_url, 'Website', student.has_page))
 
                 $student.appendChild($links);
                 $main.appendChild($student);
             })
+
+            console.info(students)
 
             $main.classList.toggle('loading');
         })()
