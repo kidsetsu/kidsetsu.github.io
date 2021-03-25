@@ -140,6 +140,9 @@ div.siswa {
 .siswa h4 {
   margin: 0 0 0 100px;
   padding: 5px 0 5px 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .siswa div {
