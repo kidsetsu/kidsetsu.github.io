@@ -92,7 +92,7 @@
                 student.avatar_url = owner.avatar_url
             } 
 
-            if (student.repos.length === 0) {
+            if ((student.repos || []).length === 0) {
                 student.repos = await fetchApi(`users/${student.username}/repos`)
             }
 
@@ -139,12 +139,17 @@
 
         (async function (window) {
             document.getElementById('refresh-btn').addEventListener('click', () => {
-                students.map(student => {
-                    if (!student.username) return student
-                    student.repos = []
-                    localStorage.setItem(student.username, JSON.stringify(student))
-                    return student
-                })
+                if (!students) {
+                    localStorage.clear()
+                } else {
+                    students.map(student => {
+                        if (!student.username) return student
+                        student.repos = []
+                        localStorage.setItem(student.username, JSON.stringify(student))
+                        return student
+                    })
+                }
+
                 location.href = location.pathname
             })
 
