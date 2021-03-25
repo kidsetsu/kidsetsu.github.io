@@ -2,13 +2,12 @@
 
 html, body {
   margin: 0;
+  min-height: 100vh;
   width: 100%;
 }
 
 body {
-  background-image: url('pohon.jpg');
-  background-repeat: no-repeat;
-  background-position: top center;
+  background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/purty_wood.png');
   padding: 20px 0;
 }
 
@@ -20,6 +19,7 @@ body {
   background-color: white;
 }
 
+.clear::after,
 .container::after {
   content: "";
   clear: both;
@@ -50,10 +50,15 @@ body {
   color: white;
 }
 
+#main h2,
+#main h3 {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
 #main h2 {
   margin-top: 0;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ccc;
 }
 
 #content {
@@ -88,14 +93,16 @@ form input {
 }
 
 .loading {
-  min-height: 200px;
+  width: 100%;
+  min-height: 100px;
   position: relative;
 }
 
-.loading::after {
+.loading::before {
   content: "Loading";
-  line-height: 200px;
-  font-size: 64px;
+  display: block;
+  line-height: 100px;
+  font-size: 42px;
   color: #bbb;
   position: abslute;
   top: 0;
@@ -112,17 +119,21 @@ form input {
 }
 
 .siswa {
-  margin: 0 0 1em;
-  list-style-type: none;
+  border-radius: 6px;
+  margin: 0;
+}
+
+.siswa:hover {
+  background-color: #d7e4ff;
 }
 
 ul.siswa {
   padding-left: 2em;
+  list-style-type: none;
 }
 
 div.siswa {
-  margin: 0 0 1em;
-  list-style-type: none;
+  padding: 8px;
 }
 
 .siswa a, .siswa span {
@@ -142,6 +153,8 @@ div.siswa {
   padding: 5px 0 5px 15px;
   white-space: nowrap;
   overflow: hidden;
+  line-height: 1em;
+  font-size: 18px;
   text-overflow: ellipsis;
 }
 
@@ -150,14 +163,18 @@ div.siswa {
   padding: 0 0 0 15px;
 }
 
-.siswa div a,
-.siswa div span {
+.siswa div > * {
   padding: 0;
+  line-height: 1.5em;
 }
 
 .siswa div a {
   text-decoration: none;
   color: blue;
+}
+
+.siswa div a:hover {
+  background-color: #c6d9ff;
 }
 
 .siswa li {
