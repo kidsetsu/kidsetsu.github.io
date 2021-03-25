@@ -1,0 +1,144 @@
+@charset "UTF-8";
+
+body {
+  background-image: url('pohon.jpg');
+  background-repeat: no-repeat;
+  background-position: top center;
+  margin: 0;
+}
+
+.container {
+  box-sizing: border-box;
+  width: 700px;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: white;
+}
+
+.container::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+#header {
+  margin-top: 20px;
+  background-color: #247a58;
+}
+
+#header h1 {
+  margin: 0;
+  padding: 0 0 10px;
+  color: white;
+}
+
+#nav {
+  background-color: rgba(0, 0, 0, 0.2);
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+#nav a {
+  display: inline-block;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: white;
+}
+
+#main h2 {
+  margin-top: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+#content {
+  box-sizing: border-box;
+  float: left;
+  width: 480px;
+  padding-right: 20px;
+}
+
+form label,
+form input {
+  display: block;
+  width: 100%;
+  line-height: 2em;
+  box-sizing: border-box;
+}
+
+#sidebar {
+  float: right;
+  width: 200px;
+}
+
+#footer {
+  background: white;
+  border-top: 1px solid #ccc;
+  text-align: center;
+}
+
+#footer p {
+  padding: 0;
+  margin: 0;
+}
+
+.loading {
+  min-height: 200px;
+  position: relative;
+}
+
+.loading::after {
+  content: "Loading";
+  line-height: 200px;
+  font-size: 64px;
+  color: #bbb;
+  position: abslute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.separo {
+  width: 50%;
+  box-sizing: border-box;
+  padding: 0 10px;
+  float: left;
+}
+
+.siswa {
+  padding-left: 2em;
+  margin: 0 0 1em;
+  list-style-type: none;
+}
+
+.siswa a {
+  display: block;
+}
+
+.siswa li {
+  position: relative;
+  line-height: 1.5em;
+}
+
+.siswa li::before {
+  display: inline-block;
+  position: absolute;
+  left: -1.8em;
+  top: 2px;
+  width: 1.6em;
+  text-align: center;
+}
+
+.selesai li::before {
+  content: "✅";
+}
+
+.revisi li::before {
+  content: "🔄";
+}
+
+.belum li::before {
+  content: "❓";
+}
