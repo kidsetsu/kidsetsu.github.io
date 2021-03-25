@@ -1,10 +1,15 @@
 @charset "UTF-8";
 
+html, body {
+  margin: 0;
+  width: 100%;
+}
+
 body {
   background-image: url('pohon.jpg');
   background-repeat: no-repeat;
   background-position: top center;
-  margin: 0;
+  padding: 20px 0;
 }
 
 .container {
@@ -22,7 +27,6 @@ body {
 }
 
 #header {
-  margin-top: 20px;
   background-color: #247a58;
 }
 
@@ -108,13 +112,49 @@ form input {
 }
 
 .siswa {
-  padding-left: 2em;
   margin: 0 0 1em;
   list-style-type: none;
 }
 
-.siswa a {
+ul.siswa {
+  padding-left: 2em;
+}
+
+div.siswa {
+  margin: 0 0 1em;
+  list-style-type: none;
+}
+
+.siswa a, .siswa span {
   display: block;
+}
+
+.siswa img {
+  width: 100px;
+  height: 100px;
+  background-color: #ddd;
+  border-radius: 3px;
+  float: left;
+}
+
+.siswa h4 {
+  margin: 0 0 0 100px;
+  padding: 5px 10px;
+}
+
+.siswa div {
+  margin: 0 0 0 100px;
+  padding: 0 10px;
+}
+
+.siswa div a,
+.siswa div span {
+  padding: 0;
+}
+
+.siswa div a {
+  text-decoration: none;
+  color: blue;
 }
 
 .siswa li {
