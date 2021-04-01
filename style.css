@@ -163,6 +163,8 @@ div.siswa {
   padding: 0 0 0 15px;
 }
 
+/* Feature Baru untuk Halaman Beranda */
+
 .siswa div > * {
   padding: 0;
   line-height: 1.5em;
